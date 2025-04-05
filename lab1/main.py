@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize_scalar
 
 def T(x):
     def new_x(t):
@@ -13,19 +12,22 @@ def T(x):
         raise ValueError("t must be in [0,1]")
     return new_x
 
-def iters_for_eps(alpha, eps, initial_rho):
+def n_iters(alpha, eps, initial_rho):
     return np.log(eps*(1-alpha)/initial_rho)/np.log(alpha)
 
-def C01_metric(f1, f2):
-    return minimize_scalar(lambda x: -abs(f1(x) - f2(x)), bounds=(0, 1), method='bounded').x
+def C01_metric(f, g, n_samples=1000):
+    x = np.linspace(0, 1, n_samples)
+    f_vec = np.vectorize(f)
+    g_vec = np.vectorize(g)
+    return np.max(np.abs(f_vec(x) - g_vec(x)))
 
 def main():
-    eps=10e-7
+    eps=10e-6
     alpha=1/9
-    f = lambda x: 100000*np.exp(x)
+    f = lambda x: 1000000*np.exp(x)**np.exp(x)
     f_1 = T(f)
     initial_rho = C01_metric(f, f_1)
-    iters = int(np.ceil(iters_for_eps(alpha, eps, initial_rho)))
+    iters = int(np.ceil(n_iters(alpha, eps, initial_rho)))
     print(f"Iterations for eps={eps}: {iters}")
     for i in range(0, iters):
         f = T(f)
