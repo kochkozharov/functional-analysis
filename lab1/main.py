@@ -1,4 +1,6 @@
+import inspect
 import numpy as np
+from numpy import exp, sin, cos
 import matplotlib.pyplot as plt
 
 def T(x):
@@ -22,17 +24,18 @@ def C01_metric(f, g, n_samples=1000):
     return np.max(np.abs(f_vec(x) - g_vec(x)))
 
 def main():
-    eps=10e-6
+    eps=1e-3
     alpha=1/9
-    f = lambda x: 1000000*np.exp(x)**np.exp(x)
+    f = lambda x: sin(x)
+    lambda_source = inspect.getsource(f)
+    lambda_body = lambda_source.split(":", 1)[1].strip()
     f_1 = T(f)
     initial_rho = C01_metric(f, f_1)
     iters = int(np.ceil(n_iters(alpha, eps, initial_rho)))
-    print(f"Iterations for eps={eps}: {iters}")
     for i in range(0, iters):
         f = T(f)
     f = np.vectorize(f)
-    x = np.linspace(0, 1, 1000)
+    x = np.linspace(0, 1, 10000)
 
     y = f(x)
 
@@ -40,6 +43,8 @@ def main():
     plt.xlabel('t')
     plt.ylabel('x(t)')
     plt.grid(True)
+    plt.suptitle(f'График неподвижной точки с точностью {eps}')
+    plt.figtext(0.5, 0.01, f'Начальное приближение: {lambda_body}, число итераций: {iters}', ha='center')
     plt.show()
     return
 
