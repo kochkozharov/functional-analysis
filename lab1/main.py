@@ -26,7 +26,7 @@ def C01_metric(f, g, n_samples=1000):
 def main():
     eps=1e-3
     alpha=1/9
-    f = lambda x: sin(x)
+    f = lambda t: sin(t)
     lambda_source = inspect.getsource(f)
     lambda_body = lambda_source.split(":", 1)[1].strip()
     f_1 = T(f)
