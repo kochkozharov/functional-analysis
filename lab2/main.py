@@ -6,7 +6,7 @@ a = 0.0
 b = 1.6
 
 def weight(t):
-    return 6 * t**2
+    return (6-t) * t
 
 def dot_product(p, q):
     integrand = lambda t: p(t) * q(t) * weight(t)
@@ -60,7 +60,7 @@ def incremental_approximation(epsilon, max_terms=50):
         print(f"Добавлен элемент {len(basis)}: степень {term-1}, ошибка = {error:.3e}")
     return basis, coeffs, approximations, errors
 
-epsilon = 1e-2
+epsilon = 1e-3
 basis, coeffs, approximations, errors = incremental_approximation(epsilon)
 
 t_vals = np.linspace(a, b, 300)
