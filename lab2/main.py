@@ -8,6 +8,12 @@ b = 1.6
 def weight(t):
     return (6-t) * t
 
+def y_func(t):
+    return np.exp(t)
+
+def monomial(degree):
+    return np.poly1d([1]+[0]*(degree))
+
 def dot_product(p, q):
     integrand = lambda t: p(t) * q(t) * weight(t)
     return quad(integrand, a, b)[0]
@@ -19,11 +25,7 @@ def metric(p, q):
     diff = lambda t: p(t) - q(t)
     return np.sqrt(dot_product(diff, diff))
 
-def y_func(t):
-    return np.exp(t)
-
-def create_next_orthonormal_element(term, basis):
-    p = np.poly1d([1] + [0]*term)
+def create_next_orthonormal_element(p, basis):
     for q in basis:
         proj = dot_product(p, q)
         p = p - proj * q
@@ -44,10 +46,11 @@ def incremental_approximation(epsilon, max_terms=50):
     errors.append(error)
     print(f"Начальная ошибка: {error:.3e}")
 
-    term = 0
-    while error > epsilon and term < max_terms:
+    degree = 0
+    while error > epsilon and degree < max_terms:
+        term = monomial(degree)
         q_norm = create_next_orthonormal_element(term, basis)
-        term += 1
+        degree += 1
         if q_norm is None:
             continue
         basis.append(q_norm)
@@ -57,7 +60,7 @@ def incremental_approximation(epsilon, max_terms=50):
         error = metric(y_func, current_approx)
         errors.append(error)
         approximations.append(current_approx)
-        print(f"Добавлен элемент {len(basis)}: степень {term-1}, ошибка = {error:.3e}")
+        print(f"Добавлен элемент {len(basis)}: степень {degree-1}, ошибка = {error:.3e}")
     return basis, coeffs, approximations, errors
 
 epsilon = 1e-3
@@ -77,7 +80,7 @@ for idx, approx_poly in enumerate(approximations):
 plt.plot(t_vals, y_vals, 'k-', lw=3, label="$y(t)=e^t$")
 plt.xlabel("t")
 plt.ylabel("$y(t)$")
-plt.title("Промежуточные приближения функции $y(t)=e^t$")
+plt.title(f"Приближение функции $y(t)=e^t$ с точностью {epsilon}")
 plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.grid(True)
 plt.tight_layout()
