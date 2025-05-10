@@ -71,6 +71,7 @@ y_vals = np.array([y_func(t) for t in t_vals])
 
 final_N = len(basis)
 final_approx_vals = approximations[-1](t_vals)
+print(approximations[-1])
 print(f"\nФинальное число членов ряда: {final_N}")
 
 plt.figure(figsize=(14, 10))
