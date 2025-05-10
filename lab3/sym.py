@@ -19,16 +19,16 @@ f_cont = f*sp.diff(F_cont, x)
 I_part1_sym = sp.integrate(f_cont, (x, -8, 75))
 I_part2_sym = f.subs(x, 1)+2*f.subs(x, 8)
 I_sym = sp.simplify(I_part1_sym + I_part2_sym, rational=True)
-print("Аналитическое выражение интеграла Лебега-Стилтьеса:\n", I_sym)
+print("Analytical expression of the Lebesgue-Stiltjes integral:\n", I_sym)
 latex_str = sp.latex(I_sym)
-print("Latex выражение:\n", latex_str)
+print("Latex expression:\n", latex_str)
 I_sym_val = I_sym.evalf()
-print("Численное значение интеграла Лебега-Стилтьеса в результате вычисления символьного выражения", I_sym_val)
+print("Numerical value of the Lebesgue-Stiltjes integral as a result of evaluation of the symbolic expression", I_sym_val)
 
 f_cont_num = sp.lambdify(x, f_cont, modules=['numpy'])
 f_num = sp.lambdify(x, f, modules=['numpy'])
 
 I_part1, err = quad(f_cont_num, -8, 75)
 I_part2=f_num(1)+2*f_num(8)
-I = I_part1 + I_part2
-print("Численное значение интеграла Лебега-Стилтьеса в результате численного интегрирования:", I)
+I_num = I_part1 + I_part2
+print("Numerical value of Lebesgue-Stiltjes integral as a result of numerical integration:", I_num)
