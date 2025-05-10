@@ -25,4 +25,4 @@ def f_cont(x):
 I_part1, err = quad(f_cont, -8, 75)
 I_part2=f(1)+2*f(8)
 I = I_part1 + I_part2
-print("Интеграл Лебега Стилтьеса:", I)
+print("Интеграл Лебега-Стилтьеса:", I)
